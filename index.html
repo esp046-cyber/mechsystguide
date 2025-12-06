@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanical Systems Operations Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 30px; text-align: center; }
+        h1 { color: #667eea; font-size: 1.25em; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 0.55em; }
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { background: white; border: none; padding: 15px 25px; border-radius: 10px; cursor: pointer; font-size: 0.5em; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .tab-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .tab-btn.active { background: #667eea; color: white; }
+        .content-area { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .system-card { background: #f8f9fa; border-left: 5px solid #667eea; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        .system-card h3 { color: #667eea; margin-bottom: 15px; font-size: 1.5em; }
+        .checklist { list-style: none; padding-left: 0; }
+        .checklist li { padding: 12px; margin-bottom: 10px; background: white; border-radius: 8px; border-left: 4px solid #28a745; }
+        .checklist li::before { content: "✓"; color: #28a745; font-weight: bold; margin-right: 10px; }
+        .info-box { background: #e3f2fd; border-left: 5px solid #2196f3; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .warning-box { background: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 5px; }
+        .emergency-box { background: #ffebee; border-left: 5px solid #f44336; padding: 15px; margin: 20px 0; border-radius: 5px; font-weight: 600; }
+        .diagram { background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #667eea; }
+        .troubleshoot-table { width: 100%; margin: 15px 0; }
+        .troubleshoot-table td { vertical-align: top; padding: 15px; }
+        .problem-col { background: #ffebee; font-weight: 600; width: 40%; }
+        .solution-col { background: #e8f5e9; width: 60%; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #667eea; color: white; font-weight: 600; }
+        tr:hover { background: #f5f5f5; }
+        
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            header { padding: 20px; }
+            h1 { font-size: 1em; }
+            .subtitle { font-size: 0.5em; }
+            .nav-tabs { gap: 5px; }
+            .tab-btn { padding: 10px 15px; font-size: 0.45em; }
+            .content-area { padding: 15px; }
+            .system-card { padding: 15px; }
+            .system-card h3 { font-size: 1.2em; }
+            .checklist li { padding: 8px; font-size: 0.9em; }
+            .troubleshoot-table td { padding: 10px; font-size: 0.85em; display: block; width: 100% !important; }
+            .problem-col { border-bottom: 2px solid #667eea; }
+            .solution-col { margin-bottom: 15px; }
+            table { font-size: 0.85em; }
+            th, td { padding: 8px; }
+            .diagram { padding: 10px; }
+            .diagram p { font-size: 0.9em; line-height: 1.5em; }
+            .diagram span { display: inline-block; margin: 5px 2px; padding: 8px 12px; font-size: 0.8em; }
+        }
+        
+        @media (max-width: 480px) {
+            h1 { font-size: 0.9em; }
+            .subtitle { font-size: 0.45em; }
+            .tab-btn { padding: 8px 12px; font-size: 0.4em; }
+            .content-area { padding: 10px; }
+            .checklist li { font-size: 0.85em; }
+            .diagram span { font-size: 0.7em; padding: 6px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ Mechanical Systems Operations Guide</h1>
+            <p class="subtitle">Comprehensive guide for HVAC, pumps, chillers, boilers, and ventilation systems</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+            <button class="tab-btn" onclick="showTab('hvac')">HVAC</button>
+            <button class="tab-btn" onclick="showTab('pumps')">Pumps & Chillers</button>
+            <button class="tab-btn" onclick="showTab('boilers')">Boilers</button>
+            <button class="tab-btn" onclick="showTab('ventilation')">Ventilation</button>
+            <button class="tab-btn" onclick="showTab('inspections')">Inspections</button>
+            <button class="tab-btn" onclick="showTab('troubleshooting')">Troubleshooting</button>
+            <button class="tab-btn" onclick="showTab('diagrams')">Diagrams</button>
+            <button class="tab-btn" onclick="showTab('emergency')">Emergency</button>
+            <button class="tab-btn" onclick="showTab('equipment')">Equipment List</button>
+            <button class="tab-btn" onclick="showTab('cooling-towers')">Cooling Towers</button>
+            <button class="tab-btn" onclick="showTab('controls')">Controls</button>
+            <button class="tab-btn" onclick="showTab('motors')">Motors & Drives</button>
+            <button class="tab-btn" onclick="showTab('safety')">Safety</button>
+        </div>
+        
+        <div class="content-area">
+            <div id="overview" class="tab-content active">
+                <h2>Mechanical Systems Operations Overview</h2>
+                <div class="system-card">
+                    <h3>Primary Responsibilities</h3>
+                    <ul class="checklist">
+                        <li>Operate and monitor all mechanical systems daily</li>
+                        <li>Ensure equipment runs efficiently and safely</li>
+                        <li>Perform routine inspections of machinery</li>
+                        <li>Maintain mechanical rooms and equipment areas</li>
+                        <li>Document operations and maintenance</li>
+                        <li>Respond to alarms and emergencies</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="hvac" class="tab-content">
+                <h2>HVAC Systems</h2>
+                <div class="system-card">
+                    <h3>Air Handling Units</h3>
+                    <ul class="checklist">
+                        <li>Check fan operation and belt tension</li>
+                        <li>Monitor air temperatures</li>
+                        <li>Inspect and replace filters</li>
+                        <li>Verify damper operation</li>
+                        <li>Monitor motor amperage</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="pumps" class="tab-content">
+                <h2>Pumps & Chillers</h2>
+                <div class="system-card">
+                    <h3>Pump Systems</h3>
+                    <ul class="checklist">
+                        <li>Monitor suction/discharge pressures</li>
+                        <li>Check for leaks around seals</li>
+                        <li>Listen for unusual noises</li>
+                        <li>Check bearing temperatures</li>
+                        <li>Monitor motor current</li>
+                    </ul>
+                </div>
+                <div class="system-card">
+                    <h3>Chiller Operations</h3>
+                    <ul class="checklist">
+                        <li>Monitor refrigerant pressures</li>
+                        <li>Check oil levels and pressure</li>
+                        <li>Verify water flow</li>
+                        <li>Check for refrigerant leaks</li>
+                        <li>Monitor efficiency</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="boilers" class="tab-content">
+                <h2>Boiler Systems</h2>
+                <div class="system-card">
+                    <h3>Boiler Operations</h3>
+                    <ul class="checklist">
+                        <li>Monitor pressure and temperature</li>
+                        <li>Check water level in gauge glass</li>
+                        <li>Verify burner flame</li>
+                        <li>Test low water cutoff daily</li>
+                        <li>Inspect safety relief valves</li>
+                        <li>Monitor water treatment</li>
+                    </ul>
+                </div>
+                <div class="warning-box">
+                    <strong>⚠️ SAFETY CRITICAL:</strong> Never operate boiler without proper water level. Test safety devices daily.
+                </div>
+            </div>
+            
+            <div id="ventilation" class="tab-content">
+                <h2>Ventilation Systems</h2>
+                <div class="system-card">
+                    <h3>Exhaust and Supply Fans</h3>
+                    <ul class="checklist">
+                        <li>Verify fan rotation</li>
+                        <li>Check belt tension</li>
+                        <li>Monitor motor temperatures</li>
+                        <li>Inspect ductwork for leaks</li>
+                        <li>Verify damper positions</li>
+                        <li>Monitor static pressure</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="inspections" class="tab-content">
+                <h2>Routine Inspections</h2>
+                <div class="system-card">
+                    <h3>Daily Tasks</h3>
+                    <ul class="checklist">
+                        <li>Walk mechanical rooms, check for leaks</li>
+                        <li>Listen for unusual noises</li>
+                        <li>Verify equipment running properly</li>
+                        <li>Review and clear alarms</li>
+                        <li>Record meter readings</li>
+                    </ul>
+                </div>
+                <div class="system-card">
+                    <h3>Weekly Tasks</h3>
+                    <ul class="checklist">
+                        <li>Inspect belts for wear</li>
+                        <li>Check oil levels</li>
+                        <li>Test emergency shutdown</li>
+                        <li>Inspect electrical connections</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="troubleshooting" class="tab-content">
+                <h2>Troubleshooting Guide</h2>
+                <div class="system-card">
+                    <h3>HVAC Issues</h3>
+                    <table class="troubleshoot-table">
+                        <tr><td class="problem-col">No airflow</td><td class="solution-col">Check fan motor, power, belts, breakers</td></tr>
+                        <tr><td class="problem-col">High supply temp</td><td class="solution-col">Check cooling coil valve, water flow, filters</td></tr>
+                        <tr><td class="problem-col">Excessive vibration</td><td class="solution-col">Check fan balance, bearings, mounting bolts</td></tr>
+                    </table>
+                </div>
+                <div class="system-card">
+                    <h3>Pump Issues</h3>
+                    <table class="troubleshoot-table">
+                        <tr><td class="problem-col">Won't start</td><td class="solution-col">Check power, motor overload, control circuit</td></tr>
+                        <tr><td class="problem-col">Low pressure</td><td class="solution-col">Check cavitation, suction pressure, impeller</td></tr>
+                        <tr><td class="problem-col">Seal leaking</td><td class="solution-col">Replace seal, check alignment, verify seal water</td></tr>
+                    </table>
+                </div>
+                <div class="system-card">
+                    <h3>Chiller Issues</h3>
+                    <table class="troubleshoot-table">
+                        <tr><td class="problem-col">High head pressure</td><td class="solution-col">Check condenser flow, clean tubes, verify tower</td></tr>
+                        <tr><td class="problem-col">Low suction</td><td class="solution-col">Check refrigerant charge, flow, leaks, valve</td></tr>
+                    </table>
+                </div>
+                <div class="system-card">
+                    <h3>Boiler Issues</h3>
+                    <table class="troubleshoot-table">
+                        <tr><td class="problem-col">Won't ignite</td><td class="solution-col">Check fuel supply, ignition, flame scanner</td></tr>
+                        <tr><td class="problem-col">Low water</td><td class="solution-col">Check feedwater pump, leaks, makeup water</td></tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="diagrams" class="tab-content">
+                <h2>Equipment Diagrams</h2>
+                <div class="diagram">
+                    <h3>🌡️ Air Handling Unit Flow</h3>
+                    <p style="text-align:center; font-size:1.2em; padding:20px; line-height:2em;">
+                        <span style="background:#87CEEB; padding:10px 20px; border-radius:5px; margin:5px;">Outside Air</span>
+                        <span style="font-size:1.5em;">→</span>
+                        <span style="background:#FFD700; padding:10px 20px; border-radius:5px; margin:5px;">Filter</span>
+                        <span style="font-size:1.5em;">→</span>
+                        <span style="background:#87CEFA; padding:10px 20px; border-radius:5px; margin:5px;">Cooling Coil</span>
+                        <span style="font-size:1.5em;">→</span>
+                        <span style="background:#FFB6C1; padding:10px 20px; border-radius:5px; margin:5px;">Heating Coil</span>
+                        <span style="font-size:1.5em;">→</span>
+                        <span style="background:#90EE90; padding:10px 20px; border-radius:5px; margin:5px;">Fan</span>
+                        <span style="font-size:1.5em;">→</span>
+                        <span style="background:#98FB98; padding:10px 20px; border-radius:5px; margin:5px;">Supply Air</span>
+                    </p>
+                </div>
+                
+                <div class="diagram">
+                    <h3>🧊 Chiller Refrigeration Cycle</h3>
+                    <p style="text-align:center; font-size:1.2em; padding:20px; line-height:2em;">
+                        <span style="background:#FFD700; padding:10px 20px; border-radius:5px; margin:5px;">Compressor</span>
+                        <span style="font-size:1.5em; color:#FF0000;">→</span>
+                        <span style="background:#FFB6C1; padding:10px 20px; border-radius:5px; margin:5px;">Condenser</span>
+                        <span style="font-size:1.5em; color:#FFA500;">→</span>
+                        <span style="background:#87CEEB; padding:10px 20px; border-radius:5px; margin:5px;">Expansion Valve</span>
+                        <span style="font-size:1.5em; color:#0000FF;">→</span>
+                        <span style="background:#87CEFA; padding:10px 20px; border-radius:5px; margin:5px;">Evaporator</span>
+                        <span style="font-size:1.5em; color:#00BFFF;">→</span>
+                        <span style="font-size:0.9em;">(back to Compressor)</span>
+                    </p>
+                    <p style="text-align:center; margin-top:20px;">
+                        <span style="color:#FF0000;">●</span> High Pressure Hot Gas &nbsp;
+                        <span style="color:#FFA500;">●</span> High Pressure Liquid &nbsp;
+                        <span style="color:#0000FF;">●</span> Low Pressure Liquid &nbsp;
+                        <span style="color:#00BFFF;">●</span> Low Pressure Vapor
+                    </p>
+                </div>
+                
+                <div class="diagram">
+                    <h3>🔥 Boiler Components</h3>
+                    <table style="width:100%; text-align:center;">
+                        <tr>
+                            <td style="background:#FF6347; padding:15px; border-radius:5px; margin:5px;">Burner</td>
+                            <td style="background:#D3D3D3; padding:15px; border-radius:5px; margin:5px;">Boiler Body<br><small>(Steam Space Above / Water Below)</small></td>
+                            <td style="background:#FF0000; padding:15px; border-radius:5px; margin:5px;">Safety Valve</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top:20px;">↑<br>Fuel In</td>
+                            <td style="padding-top:20px;">↓<br>Feedwater In / Blowdown Out</td>
+                            <td style="padding-top:20px;">↑<br>Steam Out</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="diagram">
+                    <h3>💧 Pump Assembly</h3>
+                    <p style="text-align:center; font-size:1.2em; padding:20px; line-height:2em;">
+                        <span style="background:#4682B4; padding:10px 20px; border-radius:5px; margin:5px; color:white;">Motor</span>
+                        <span style="font-size:1.5em;">—</span>
+                        <span style="background:#A9A9A9; padding:10px 20px; border-radius:5px; margin:5px;">Coupling</span>
+                        <span style="font-size:1.5em;">—</span>
+                        <span style="background:#87CEEB; padding:10px 20px; border-radius:5px; margin:5px;">Pump Casing<br><small>(Seal & Impeller)</small></span>
+                    </p>
+                    <p style="text-align:center;">
+                        <span style="color:#0000CD;">← Suction</span> &nbsp;&nbsp;&nbsp;
+                        <span style="color:#FF0000;">Discharge →</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div id="emergency" class="tab-content">
+                <h2>🚨 Emergency Shutdown Procedures</h2>
+                <div class="emergency-box">
+                    <strong>⚠️ CRITICAL:</strong> In any emergency, prioritize human safety. Evacuate if necessary. Call 911 for fires, injuries, or hazardous conditions.
+                </div>
+                
+                <div class="system-card">
+                    <h3>HVAC Emergency Shutdown</h3>
+                    <ol style="padding-left:20px; line-height:2em;">
+                        <li>Press emergency stop button (red)</li>
+                        <li>Shut off power at main disconnect</li>
+                        <li>Close isolation dampers</li>
+                        <li>Tag "DO NOT OPERATE" with lockout</li>
+                        <li>Document and notify supervisor</li>
+                    </ol>
+                    <div class="warning-box" style="margin-top:15px;"><strong>When:</strong> Smoke, fire, burning smell, severe vibration, motor overheating, electrical arcing</div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Pump Emergency Shutdown</h3>
+                    <ol style="padding-left:20px; line-height:2em;">
+                        <li>Press emergency stop or turn off starter</li>
+                        <li>Close suction/discharge valves</li>
+                        <li>Lockout electrical disconnect</li>
+                        <li>If major leak: shut water supply, contain spill</li>
+                        <li>Document and report</li>
+                    </ol>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Chiller Emergency Shutdown</h3>
+                    <ol style="padding-left:20px; line-height:2em;">
+                        <li>Activate emergency stop on control panel</li>
+                        <li>Shut off main power disconnect</li>
+                        <li>Close chilled/condenser water valves</li>
+                        <li>If refrigerant leak: evacuate area, ventilate</li>
+                        <li>Contact refrigeration technician</li>
+                    </ol>
+                    <div class="emergency-box" style="margin-top:15px;"><strong>REFRIGERANT LEAK:</strong> Evacuate immediately, activate exhaust fans if safe, post warnings, call HVAC emergency service</div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Boiler Emergency Shutdown</h3>
+                    <ol style="padding-left:20px; line-height:2em;">
+                        <li><strong>IMMEDIATELY</strong> press emergency stop</li>
+                        <li>Shut off fuel supply (gas valve/oil pump)</li>
+                        <li>Shut off combustion air fan</li>
+                        <li>If safe, close steam isolation valves</li>
+                        <li>Allow to cool - DO NOT add cold water</li>
+                    </ol>
+                    <div class="emergency-box" style="margin-top:15px;">
+                        <strong>LOW WATER:</strong> DO NOT add water, shut down immediately, cool naturally<br>
+                        <strong>OVERPRESSURE:</strong> Verify safety valves, reduce firing, emergency shutdown if continuing
+                    </div>
+                </div>
+                
+                <table>
+                    <tr><th>Emergency Type</th><th>Contact</th></tr>
+                    <tr><td>Fire/Medical/Police</td><td><strong>911</strong></td></tr>
+                    <tr><td>Facility Manager</td><td>[Insert Number]</td></tr>
+                    <tr><td>Maintenance Supervisor</td><td>[Insert Number]</td></tr>
+                    <tr><td>HVAC Service</td><td>[Insert Number]</td></tr>
+                </table>
+            </div>
+            
+            <!-- Equipment List Tab -->
+            <div id="equipment" class="tab-content">
+                <h2>📋 Equipment Inventory</h2>
+                
+                <div class="system-card">
+                    <h3>❄️ HVAC Equipment</h3>
+                    <table>
+                        <tr>
+                            <th>Equipment ID</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Capacity</th>
+                            <th>Year Installed</th>
+                        </tr>
+                        <tr>
+                            <td>AHU-01</td>
+                            <td>Air Handling Unit</td>
+                            <td>Mechanical Room 1</td>
+                            <td>20,000 CFM</td>
+                            <td>2018</td>
+                        </tr>
+                        <tr>
+                            <td>AHU-02</td>
+                            <td>Air Handling Unit</td>
+                            <td>Mechanical Room 2</td>
+                            <td>15,000 CFM</td>
+                            <td>2019</td>
+                        </tr>
+                        <tr>
+                            <td>AHU-03</td>
+                            <td>Air Handling Unit</td>
+                            <td>Penthouse</td>
+                            <td>25,000 CFM</td>
+                            <td>2020</td>
+                        </tr>
+                        <tr>
+                            <td>RTU-01</td>
+                            <td>Rooftop Unit</td>
+                            <td>Roof East</td>
+                            <td>10 Tons</td>
+                            <td>2019</td>
+                        </tr>
+                        <tr>
+                            <td>RTU-02</td>
+                            <td>Rooftop Unit</td>
+                            <td>Roof West</td>
+                            <td>12 Tons</td>
+                            <td>2020</td>
+                        </tr>
+                        <tr>
+                            <td>FCU-01 to 15</td>
+                            <td>Fan Coil Units</td>
+                            <td>Various Floors</td>
+                            <td>400-800 CFM</td>
+                            <td>2018-2021</td>
+                        </tr>
+                        <tr>
+                            <td>VAV-01 to 45</td>
+                            <td>VAV Boxes</td>
+                            <td>Throughout Building</td>
+                            <td>300-1200 CFM</td>
+                            <td>2018-2020</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="info-box">
+                        <strong>📝 Notes:</strong> All AHUs equipped with VFDs. RTUs have economizer dampers. FCUs serve perimeter zones. VAVs have reheat coils.
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>💧 Pump Inventory</h3>
+                    <table>
+                        <tr>
+                            <th>Pump ID</th>
+                            <th>Type</th>
+                            <th>Service</th>
+                            <th>Flow (GPM)</th>
+                            <th>Head (FT)</th>
+                            <th>HP</th>
+                        </tr>
+                        <tr>
+                            <td>CHWP-1</td>
+                            <td>Centrifugal</td>
+                            <td>Chilled Water Primary</td>
+                            <td>500</td>
+                            <td>80</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>CHWP-2</td>
+                            <td>Centrifugal</td>
+                            <td>Chilled Water Primary</td>
+                            <td>500</td>
+                            <td>80</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>CHWP-3</td>
+                            <td>Centrifugal</td>
+                            <td>Chilled Water Secondary</td>
+                            <td>600</td>
+                            <td>100</td>
+                            <td>25</td>
+                        </tr>
+                        <tr>
+                            <td>HWP-1</td>
+                            <td>Centrifugal</td>
+                            <td>Hot Water Supply</td>
+                            <td>350</td>
+                            <td>60</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>HWP-2</td>
+                            <td>Centrifugal</td>
+                            <td>Hot Water Supply</td>
+                            <td>350</td>
+                            <td>60</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>CWP-1</td>
+                            <td>Centrifugal</td>
+                            <td>Condenser Water</td>
+                            <td>800</td>
+                            <td>70</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>CWP-2</td>
+                            <td>Centrifugal</td>
+                            <td>Condenser Water</td>
+                            <td>800</td>
+                            <td>70</td>
+                            <td>30</td>
+                        </tr>
+                        <tr>
+                            <td>CWP-3</td>
+                            <td>Centrifugal</td>
+                            <td>Condenser Water Standby</td>
+                            <td>800</td>
+                            <td>70</td>
+                            <td>30</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="info-box">
+                        <strong>📝 Notes:</strong> All pumps equipped with VFDs except standby units. CHWP configured as primary-secondary system. Rotation schedule: alternate pumps weekly.
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>🧊 Chiller Details</h3>
+                    <table>
+                        <tr>
+                            <th>Chiller ID</th>
+                            <th>Manufacturer</th>
+                            <th>Type</th>
+                            <th>Capacity (Tons)</th>
+                            <th>Refrigerant</th>
+                            <th>Year</th>
+                        </tr>
+                        <tr>
+                            <td>CH-1</td>
+                            <td>Carrier</td>
+                            <td>Water-Cooled Centrifugal</td>
+                            <td>400</td>
+                            <td>R-134a</td>
+                            <td>2017</td>
+                        </tr>
+                        <tr>
+                            <td>CH-2</td>
+                            <td>Trane</td>
+                            <td>Water-Cooled Centrifugal</td>
+                            <td>400</td>
+                            <td>R-134a</td>
+                            <td>2018</td>
+                        </tr>
+                        <tr>
+                            <td>CH-3</td>
+                            <td>York</td>
+                            <td>Water-Cooled Screw</td>
+                            <td>300</td>
+                            <td>R-134a</td>
+                            <td>2019</td>
+                        </tr>
+                    </table>
+                    
+                    <table style="margin-top:20px;">
+                        <tr>
+                            <th>Chiller ID</th>
+                            <th>Evaporator Flow (GPM)</th>
+                            <th>Condenser Flow (GPM)</th>
+                            <th>Full Load Amps</th>
+                            <th>Voltage</th>
+                        </tr>
+                        <tr>
+                            <td>CH-1</td>
+                            <td>960</td>
+                            <td>1200</td>
+                            <td>385</td>
+                            <td>480V/3Ph/60Hz</td>
+                        </tr>
+                        <tr>
+                            <td>CH-2</td>
+                            <td>960</td>
+                            <td>1200</td>
+                            <td>390</td>
+                            <td>480V/3Ph/60Hz</td>
+                        </tr>
+                        <tr>
+                            <td>CH-3</td>
+                            <td>720</td>
+                            <td>900</td>
+                            <td>295</td>
+                            <td>480V/3Ph/60Hz</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="info-box">
+                        <strong>📝 Operating Parameters:</strong><br>
+                        • Chilled Water Supply Temp: 42-45°F<br>
+                        • Condenser Water Supply Temp: 85°F (Design)<br>
+                        • Approach Temperature: 1-2°F<br>
+                        • Oil Pressure: 8-12 PSI above suction<br>
+                        • Lead/Lag rotation: Weekly
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Service Requirements:</strong> Quarterly oil analysis, annual refrigerant leak test, tube cleaning per manufacturer schedule. Maintain service logs in equipment folder.
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>🔥 Boiler Information</h3>
+                    <table>
+                        <tr>
+                            <th>Boiler ID</th>
+                            <th>Manufacturer</th>
+                            <th>Type</th>
+                            <th>Capacity (MBH)</th>
+                            <th>Fuel Type</th>
+                            <th>Year</th>
+                        </tr>
+                        <tr>
+                            <td>B-1</td>
+                            <td>Cleaver-Brooks</td>
+                            <td>Fire Tube</td>
+                            <td>3,000</td>
+                            <td>Natural Gas</td>
+                            <td>2016</td>
+                        </tr>
+                        <tr>
+                            <td>B-2</td>
+                            <td>Cleaver-Brooks</td>
+                            <td>Fire Tube</td>
+                            <td>3,000</td>
+                            <td>Natural Gas</td>
+                            <td>2016</td>
+                        </tr>
+                        <tr>
+                            <td>B-3</td>
+                            <td>Lochinvar</td>
+                            <td>Condensing</td>
+                            <td>2,000</td>
+                            <td>Natural Gas</td>
+                            <td>2020</td>
+                        </tr>
+                    </table>
+                    
+                    <table style="margin-top:20px;">
+                        <tr>
+                            <th>Boiler ID</th>
+                            <th>Design Pressure (PSI)</th>
+                            <th>Operating Pressure (PSI)</th>
+                            <th>Supply Temp (°F)</th>
+                            <th>Efficiency (%)</th>
+                        </tr>
+                        <tr>
+                            <td>B-1</td>
+                            <td>150</td>
+                            <td>12-15</td>
+                            <td>180</td>
+                            <td>82-84</td>
+                        </tr>
+                        <tr>
+                            <td>B-2</td>
+                            <td>150</td>
+                            <td>12-15</td>
+                            <td>180</td>
+                            <td>82-84</td>
+                        </tr>
+                        <tr>
+                            <td>B-3</td>
+                            <td>160</td>
+                            <td>12-15</td>
+                            <td>140-180</td>
+                            <td>95-97</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="info-box">
+                        <strong>📝 Operating Parameters:</strong><br>
+                        • Hot Water Supply: 140-180°F (outdoor reset)<br>
+                        • Return Water: 120-160°F<br>
+                        • ΔT Design: 20°F<br>
+                        • Gas Pressure: 5-7" WC at burner<br>
+                        • Combustion Air: Verify adequate ventilation<br>
+                        • Water Treatment: Maintain pH 8.5-9.5, conductivity <1500 μS
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Safety Devices:</strong><br>
+                        • Low Water Cutoff: Test DAILY<br>
+                        • High Pressure Limit: 15 PSI cutout<br>
+                        • Safety Relief Valve: Set at 30 PSI<br>
+                        • Flame Safeguard: Test weekly<br>
+                        • High Temperature Limit: 220°F<br>
+                        • All safety devices must be tested per schedule
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>📝 Maintenance Schedule:</strong><br>
+                        • Daily: Water level, burner operation, flue temp<br>
+                        • Weekly: Blowdown, test LWCO, flame scanner<br>
+                        • Monthly: Water treatment test, inspect burner<br>
+                        • Quarterly: Combustion analysis, safety valve test<br>
+                        • Annual: Tube cleaning, complete inspection, insurance inspection
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>📊 Equipment Summary</h3>
+                    <table>
+                        <tr>
+                            <th>System</th>
+                            <th>Total Units</th>
+                            <th>Total Capacity</th>
+                            <th>Redundancy</th>
+                        </tr>
+                        <tr>
+                            <td>Air Handling Units</td>
+                            <td>3</td>
+                            <td>60,000 CFM</td>
+                            <td>N+0</td>
+                        </tr>
+                        <tr>
+                            <td>Rooftop Units</td>
+                            <td>2</td>
+                            <td>22 Tons</td>
+                            <td>Independent zones</td>
+                        </tr>
+                        <tr>
+                            <td>Chillers</td>
+                            <td>3</td>
+                            <td>1,100 Tons</td>
+                            <td>N+1</td>
+                        </tr>
+                        <tr>
+                            <td>Boilers</td>
+                            <td>3</td>
+                            <td>8,000 MBH</td>
+                            <td>N+1</td>
+                        </tr>
+                        <tr>
+                            <td>Chilled Water Pumps</td>
+                            <td>3</td>
+                            <td>1,600 GPM</td>
+                            <td>N+0 Primary, N+0 Secondary</td>
+                        </tr>
+                        <tr>
+                            <td>Hot Water Pumps</td>
+                            <td>2</td>
+                            <td>700 GPM</td>
+                            <td>N+1</td>
+                        </tr>
+                        <tr>
+                            <td>Condenser Water Pumps</td>
+                            <td>3</td>
+                            <td>2,400 GPM</td>
+                            <td>N+1</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Cooling Towers Tab -->
+            <div id="cooling-towers" class="tab-content">
+                <h2>🌊 Cooling Tower Equipment</h2>
+                
+                <div class="system-card">
+                    <h3>Cooling Tower Inventory</h3>
+                    <table>
+                        <tr>
+                            <th>Tower ID</th>
+                            <th>Manufacturer</th>
+                            <th>Type</th>
+                            <th>Capacity (Tons)</th>
+                            <th>Cells</th>
+                            <th>Year</th>
+                        </tr>
+                        <tr>
+                            <td>CT-1</td>
+                            <td>BAC</td>
+                            <td>Induced Draft Crossflow</td>
+                            <td>600</td>
+                            <td>2</td>
+                            <td>2017</td>
+                        </tr>
+                        <tr>
+                            <td>CT-2</td>
+                            <td>BAC</td>
+                            <td>Induced Draft Crossflow</td>
+                            <td>600</td>
+                            <td>2</td>
+                            <td>2017</td>
+                        </tr>
+                    </table>
+                    
+                    <table style="margin-top:20px;">
+                        <tr>
+                            <th>Tower ID</th>
+                            <th>Flow Rate (GPM)</th>
+                            <th>Fan HP</th>
+                            <th>Number of Fans</th>
+                            <th>Basin Capacity (Gal)</th>
+                        </tr>
+                        <tr>
+                            <td>CT-1</td>
+                            <td>1,200</td>
+                            <td>15 HP each</td>
+                            <td>2</td>
+                            <td>500</td>
+                        </tr>
+                        <tr>
+                            <td>CT-2</td>
+                            <td>1,200</td>
+                            <td>15 HP each</td>
+                            <td>2</td>
+                            <td>500</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="info-box">
+                        <strong>📝 Operating Parameters:</strong><br>
+                        • Design Entering Water Temp: 95°F<br>
+                        • Design Leaving Water Temp: 85°F<br>
+                        • Design Wet Bulb: 78°F<br>
+                        • Approach: 7°F<br>
+                        • Range: 10°F<br>
+                        • Cycles of Concentration: 3-5<br>
+                        • pH Range: 7.5-8.5
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Water Treatment System</h3>
+                    <table>
+                        <tr>
+                            <th>Component</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Setting/Capacity</th>
+                        </tr>
+                        <tr>
+                            <td>Chemical Feed System</td>
+                            <td>Automated Controller</td>
+                            <td>CT Basin Area</td>
+                            <td>pH, Conductivity Control</td>
+                        </tr>
+                        <tr>
+                            <td>Biocide Feeder</td>
+                            <td>Timer-Based Pump</td>
+                            <td>CT Basin Area</td>
+                            <td>2x per week dosing</td>
+                        </tr>
+                        <tr>
+                            <td>Blowdown Valve</td>
+                            <td>Automatic Control</td>
+                            <td>CT Basin</td>
+                            <td>Set at 1500 μS</td>
+                        </tr>
+                        <tr>
+                            <td>Makeup Water</td>
+                            <td>Float Valve</td>
+                            <td>CT Basin</td>
+                            <td>Auto Fill</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Maintenance Checklist</h3>
+                    <ul class="checklist">
+                        <li>Daily: Check basin water level and makeup operation</li>
+                        <li>Daily: Inspect for unusual vibration or noise</li>
+                        <li>Weekly: Test water chemistry (pH, conductivity, biocide)</li>
+                        <li>Weekly: Inspect fill media for fouling or damage</li>
+                        <li>Monthly: Clean strainers and check drift eliminators</li>
+                        <li>Monthly: Inspect fan blades and gearbox oil level</li>
+                        <li>Quarterly: Check fan belt tension and alignment</li>
+                        <li>Quarterly: Clean basin and remove sediment</li>
+                        <li>Semi-Annual: Inspect and clean fill media thoroughly</li>
+                        <li>Annual: Complete tower shutdown and deep cleaning</li>
+                        <li>Annual: Legionella testing per facility protocol</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ Water Quality Limits:</strong><br>
+                    • pH: 7.5-8.5 (adjust if outside range)<br>
+                    • Conductivity: < 1500 μS (increase blowdown if exceeded)<br>
+                    • Free Chlorine: 0.5-1.0 ppm<br>
+                    • Calcium Hardness: < 800 ppm<br>
+                    • If limits exceeded, contact water treatment vendor immediately
+                </div>
+            </div>
+            
+            <!-- Controls Tab -->
+            <div id="controls" class="tab-content">
+                <h2>🖥️ Control Systems & BMS</h2>
+                
+                <div class="system-card">
+                    <h3>Building Management System</h3>
+                    <table>
+                        <tr>
+                            <th>Component</th>
+                            <th>Manufacturer</th>
+                            <th>Model</th>
+                            <th>Location</th>
+                            <th>Year</th>
+                        </tr>
+                        <tr>
+                            <td>BMS Main Server</td>
+                            <td>Johnson Controls</td>
+                            <td>Metasys ADS</td>
+                            <td>IT Room</td>
+                            <td>2019</td>
+                        </tr>
+                        <tr>
+                            <td>Operator Workstation 1</td>
+                            <td>Johnson Controls</td>
+                            <td>Metasys UI</td>
+                            <td>Main Mechanical Room</td>
+                            <td>2019</td>
+                        </tr>
+                        <tr>
+                            <td>Operator Workstation 2</td>
+                            <td>Johnson Controls</td>
+                            <td>Metasys UI</td>
+                            <td>Security Office</td>
+                            <td>2019</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Field Controllers</h3>
+                    <table>
+                        <tr>
+                            <th>Controller Type</th>
+                            <th>Model</th>
+                            <th>Quantity</th>
+                            <th>Application</th>
+                        </tr>
+                        <tr>
+                            <td>Network Automation Engine (NAE)</td>
+                            <td>NAE55-NIE</td>
+                            <td>2</td>
+                            <td>Primary Controllers - Chillers/Boilers</td>
+                        </tr>
+                        <tr>
+                            <td>Field Equipment Controller</td>
+                            <td>FEC2611</td>
+                            <td>8</td>
+                            <td>AHUs, RTUs</td>
+                        </tr>
+                        <tr>
+                            <td>Zone Controller</td>
+                            <td>TC-9102</td>
+                            <td>45</td>
+                            <td>VAV Boxes, Fan Coils</td>
+                        </tr>
+                        <tr>
+                            <td>Equipment Controller</td>
+                            <td>FEC1611</td>
+                            <td>12</td>
+                            <td>Pumps, Exhaust Fans</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Sensors & Devices</h3>
+                    <table>
+                        <tr>
+                            <th>Sensor Type</th>
+                            <th>Quantity</th>
+                            <th>Application</th>
+                            <th>Calibration Frequency</th>
+                        </tr>
+                        <tr>
+                            <td>Temperature Sensors (Duct)</td>
+                            <td>25</td>
+                            <td>Supply/Return Air Monitoring</td>
+                            <td>Annual</td>
+                        </tr>
+                        <tr>
+                            <td>Temperature Sensors (Pipe)</td>
+                            <td>40</td>
+                            <td>CHW/HW/CW Monitoring</td>
+                            <td>Annual</td>
+                        </tr>
+                        <tr>
+                            <td>Pressure Transducers</td>
+                            <td>30</td>
+                            <td>Water/Air Pressure</td>
+                            <td>Semi-Annual</td>
+                        </tr>
+                        <tr>
+                            <td>Flow Meters</td>
+                            <td>12</td>
+                            <td>Water Flow Measurement</td>
+                            <td>Annual</td>
+                        </tr>
+                        <tr>
+                            <td>Humidity Sensors</td>
+                            <td>15</td>
+                            <td>Space Humidity Control</td>
+                            <td>Annual</td>
+                        </tr>
+                        <tr>
+                            <td>CO2 Sensors</td>
+                            <td>20</td>
+                            <td>Demand Ventilation</td>
+                            <td>Annual</td>
+                        </tr>
+                        <tr>
+                            <td>Differential Pressure Switches</td>
+                            <td>18</td>
+                            <td>Filter Status, Pump Proof</td>
+                            <td>Semi-Annual</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Actuators & Control Valves</h3>
+                    <table>
+                        <tr>
+                            <th>Device Type</th>
+                            <th>Quantity</th>
+                            <th>Application</th>
+                        </tr>
+                        <tr>
+                            <td>2-Way Control Valves (2")</td>
+                            <td>45</td>
+                            <td>VAV Reheat Coils</td>
+                        </tr>
+                        <tr>
+                            <td>2-Way Control Valves (4"-6")</td>
+                            <td>8</td>
+                            <td>AHU Coil Control</td>
+                        </tr>
+                        <tr>
+                            <td>3-Way Mixing Valves</td>
+                            <td>6</td>
+                            <td>Hot Water Temperature Control</td>
+                        </tr>
+                        <tr>
+                            <td>Damper Actuators (VAV)</td>
+                            <td>45</td>
+                            <td>VAV Box Airflow Control</td>
+                        </tr>
+                        <tr>
+                            <td>Damper Actuators (AHU)</td>
+                            <td>24</td>
+                            <td>OA/RA/Exhaust Dampers</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="info-box">
+                    <strong>📝 BMS Access:</strong><br>
+                    • Primary URL: http://bms.facility.local<br>
+                    • Mobile Access: Available via VPN<br>
+                    • Alarm Notification: Email & SMS enabled<br>
+                    • Data Trending: 1-year historical data stored<br>
+                    • Backup Schedule: Daily automated backups
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ Control System Maintenance:</strong><br>
+                    • Monthly: Review alarm logs and trending data<br>
+                    • Quarterly: Verify sensor calibration drift<br>
+                    • Semi-Annual: Test actuator full stroke operation<br>
+                    • Annual: Complete sensor calibration and valve maintenance<br>
+                    • Document all calibrations and adjustments
+                </div>
+            </div>
+            
+            <!-- Motors & Drives Tab -->
+            <div id="motors" class="tab-content">
+                <h2>⚡ Motors & Variable Frequency Drives</h2>
+                
+                <div class="system-card">
+                    <h3>Variable Frequency Drives (VFDs)</h3>
+                    <table>
+                        <tr>
+                            <th>VFD ID</th>
+                            <th>Manufacturer</th>
+                            <th>HP Rating</th>
+                            <th>Application</th>
+                            <th>Location</th>
+                        </tr>
+                        <tr>
+                            <td>VFD-CHWP1</td>
+                            <td>ABB</td>
+                            <td>20 HP</td>
+                            <td>Chilled Water Pump 1</td>
+                            <td>Main Mechanical Room</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-CHWP2</td>
+                            <td>ABB</td>
+                            <td>20 HP</td>
+                            <td>Chilled Water Pump 2</td>
+                            <td>Main Mechanical Room</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-CHWP3</td>
+                            <td>ABB</td>
+                            <td>25 HP</td>
+                            <td>Chilled Water Pump 3</td>
+                            <td>Main Mechanical Room</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-HWP1</td>
+                            <td>Schneider</td>
+                            <td>15 HP</td>
+                            <td>Hot Water Pump 1</td>
+                            <td>Boiler Room</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-HWP2</td>
+                            <td>Schneider</td>
+                            <td>15 HP</td>
+                            <td>Hot Water Pump 2</td>
+                            <td>Boiler Room</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-CWP1</td>
+                            <td>ABB</td>
+                            <td>30 HP</td>
+                            <td>Condenser Water Pump 1</td>
+                            <td>Main Mechanical Room</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-CWP2</td>
+                            <td>ABB</td>
+                            <td>30 HP</td>
+                            <td>Condenser Water Pump 2</td>
+                            <td>Main Mechanical Room</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-AHU1</td>
+                            <td>Siemens</td>
+                            <td>15 HP</td>
+                            <td>AHU-01 Supply Fan</td>
+                            <td>Mechanical Room 1</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-AHU2</td>
+                            <td>Siemens</td>
+                            <td>10 HP</td>
+                            <td>AHU-02 Supply Fan</td>
+                            <td>Mechanical Room 2</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-AHU3</td>
+                            <td>Siemens</td>
+                            <td>20 HP</td>
+                            <td>AHU-03 Supply Fan</td>
+                            <td>Penthouse</td>
+                        </tr>
+                        <tr>
+                            <td>VFD-CTF1-4</td>
+                            <td>ABB</td>
+                            <td>15 HP each</td>
+                            <td>Cooling Tower Fans (4 total)</td>
+                            <td>Roof</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="info-box">
+                        <strong>📝 VFD Operating Parameters:</strong><br>
+                        • Input Voltage: 480V/3Ph/60Hz<br>
+                        • Control Signal: 4-20mA from BMS<br>
+                        • Minimum Speed: 30% (to prevent motor damage)<br>
+                        • Maximum Speed: 60Hz (100%)<br>
+                        • Acceleration Time: 10-15 seconds<br>
+                        • Deceleration Time: 15-20 seconds
+                    </div>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Direct-On-Line (DOL) Motors</h3>
+                    <table>
+                        <tr>
+                            <th>Motor ID</th>
+                            <th>HP</th>
+                            <th>Voltage</th>
+                            <th>Full Load Amps</th>
+                            <th>Application</th>
+                        </tr>
+                        <tr>
+                            <td>M-CWP3</td>
+                            <td>30 HP</td>
+                            <td>480V/3Ph</td>
+                            <td>38A</td>
+                            <td>Condenser Pump 3 (Standby)</td>
+                        </tr>
+                        <tr>
+                            <td>M-EF1 to EF8</td>
+                            <td>5 HP</td>
+                            <td>480V/3Ph</td>
+                            <td>7A</td>
+                            <td>Restroom Exhaust Fans</td>
+                        </tr>
+                        <tr>
+                            <td>M-KEF1-2</td>
+                            <td>10 HP</td>
+                            <td>480V/3Ph</td>
+                            <td>14A</td>
+                            <td>Kitchen Exhaust Fans</td>
+                        </tr>
+                        <tr>
+                            <td>M-SF1 to SF4</td>
+                            <td>3 HP</td>
+                            <td>480V/3Ph</td>
+                            <td>5A</td>
+                            <td>Stairwell Supply Fans</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Motor Starters & Protection</h3>
+                    <table>
+                        <tr>
+                            <th>Component</th>
+                            <th>Type</th>
+                            <th>Quantity</th>
+                            <th>Application</th>
+                        </tr>
+                        <tr>
+                            <td>Magnetic Starters</td>
+                            <td>NEMA Size 1-4</td>
+                            <td>24</td>
+                            <td>DOL Motors</td>
+                        </tr>
+                        <tr>
+                            <td>Overload Relays</td>
+                            <td>Thermal/Electronic</td>
+                            <td>24</td>
+                            <td>Motor Protection</td>
+                        </tr>
+                        <tr>
+                            <td>Soft Starters</td>
+                            <td>Electronic</td>
+                            <td>4</td>
+                            <td>Large Pump Motors</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="system-card">
+                    <h3>VFD Maintenance Tasks</h3>
+                    <ul class="checklist">
+                        <li>Monthly: Check for error codes and fault history</li>
+                        <li>Monthly: Verify cooling fan operation</li>
+                        <li>Monthly: Check for unusual noise or vibration</li>
+                        <li>Quarterly: Clean air intake filters</li>
+                        <li>Quarterly: Check all connection tightness</li>
+                        <li>Quarterly: Verify parameter settings unchanged</li>
+                        <li>Semi-Annual: Measure input/output voltages and currents</li>
+                        <li>Annual: Complete inspection and cleaning of internals</li>
+                        <li>Annual: Test emergency stop and bypass functions</li>
+                        <li>Annual: Update firmware if available</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>⚠️ VFD Safety Precautions:</strong><br>
+                    • Always disconnect power and wait 5 minutes before servicing (capacitor discharge)<br>
+                    • Use only qualified electricians for VFD work<br>
+                    • Never bypass VFD protection features<br>
+                    • Monitor drive temperature - should be < 40°C ambient<br>
+                    • Keep drives clean and free of dust/debris<br>
+                    • Document all parameter changes in equipment log
+                </div>
+                
+                <div class="info-box">
+                    <strong>📝 Common VFD Faults & Solutions:</strong><br>
+                    • <strong>Overcurrent:</strong> Check motor load, verify proper acceleration time<br>
+                    • <strong>Overvoltage:</strong> Check deceleration time, verify supply voltage<br>
+                    • <strong>Overtemperature:</strong> Clean filters, verify cooling fan, check ambient temp<br>
+                    • <strong>Ground Fault:</strong> Inspect motor and cable insulation<br>
+                    • <strong>Communication Loss:</strong> Check BMS connections and settings
+                </div>
+            </div>
+            
+            <div id="safety" class="tab-content">
+                <h2>Safety Procedures</h2>
+                <div class="warning-box">
+                    <strong>⚠️ SAFETY FIRST:</strong> Always follow lockout/tagout procedures. Never bypass safety devices.
+                </div>
+                
+                <div class="system-card">
+                    <h3>Personal Protective Equipment</h3>
+                    <ul class="checklist">
+                        <li>Safety glasses required in mechanical rooms</li>
+                        <li>Hearing protection in high-noise areas</li>
+                        <li>Gloves when handling equipment/chemicals</li>
+                        <li>Steel-toed boots required</li>
+                        <li>Hard hat in designated areas</li>
+                    </ul>
+                </div>
+                
+                <div class="system-card">
+                    <h3>Electrical Safety</h3>
+                    <ul class="checklist">
+                        <li>De-energize equipment before maintenance</li>
+                        <li>Use proper lockout/tagout procedures</li>
+                        <li>Verify zero energy state before work</li>
+                        <li>Maintain clearances around panels</li>
+                        <li>Report damaged cords immediately</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
